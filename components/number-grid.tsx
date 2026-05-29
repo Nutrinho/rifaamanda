@@ -40,8 +40,8 @@ export function NumberGrid({
   const selectedLabel = selected.map(padNumber).join(", ");
 
   return (
-    <div className={cn("grid gap-4 lg:grid-cols-[1fr_320px]", !readonly && "pb-36 lg:pb-0")}>
-      <Card className="p-2.5 sm:p-4">
+    <div className={cn("grid max-w-full gap-4 overflow-x-hidden lg:grid-cols-[minmax(0,1fr)_320px]", !readonly && "pb-36 lg:pb-0")}>
+      <Card className="max-w-full overflow-x-hidden p-2.5 sm:p-4">
         <div className="mb-3 flex items-center justify-between gap-3 px-0.5 lg:hidden">
           <div>
             <p className="text-xs font-bold uppercase text-wine-500">Números</p>
@@ -54,7 +54,7 @@ export function NumberGrid({
             </div>
           ) : null}
         </div>
-        <div className="sticky top-[65px] z-20 -mx-2.5 mb-4 flex gap-2 overflow-x-auto border-y border-wine-100 bg-white/95 px-2.5 py-2 backdrop-blur [-webkit-overflow-scrolling:touch] sm:static sm:mx-0 sm:border-0 sm:bg-transparent sm:px-1 sm:pb-2 sm:pt-0">
+        <div className="sticky top-[65px] z-20 mb-4 flex flex-wrap gap-2 border-y border-wine-100 bg-white/95 py-2 backdrop-blur sm:static sm:border-0 sm:bg-transparent sm:px-1 sm:pb-2 sm:pt-0">
           {[
             ["all", "Todos"],
             ["available", "Disponíveis"],
@@ -64,7 +64,7 @@ export function NumberGrid({
           ].map(([key, label]) => (
             <button
               key={key}
-              className={cn("focus-ring min-h-10 shrink-0 rounded-full border px-3.5 py-2 text-xs font-bold", filter === key ? "border-wine-700 bg-wine-700 text-white" : "border-wine-100 bg-white text-wine-800")}
+              className={cn("focus-ring min-h-10 rounded-full border px-3 py-2 text-xs font-bold", filter === key ? "border-wine-700 bg-wine-700 text-white" : "border-wine-100 bg-white text-wine-800")}
               onClick={() => setFilter(key as typeof filter)}
               type="button"
             >
@@ -75,7 +75,7 @@ export function NumberGrid({
         {filtered.length === 0 ? (
           <EmptyState title="Nenhum número encontrado" text="Troque o filtro para visualizar outros status." />
         ) : null}
-        <div className="grid grid-cols-4 gap-2 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12">
+        <div className="grid w-full max-w-full grid-cols-3 gap-2 min-[380px]:grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12">
           {filtered.map((item) => {
             const isSelected = selected.includes(item.number);
             return (
