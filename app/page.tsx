@@ -7,6 +7,8 @@ import { defaultCampaign, painItems, prizeItems } from "@/lib/constants";
 import { getCampaign, getNumbers } from "@/lib/supabase";
 import { money, shareText } from "@/lib/utils";
 
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   const [campaign, numbers] = await Promise.all([getCampaign(), getNumbers()]);
   const paid = numbers.filter((item) => item.status === "paid").length * campaign.ticket_price;

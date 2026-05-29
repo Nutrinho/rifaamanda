@@ -2,6 +2,8 @@ import { PublicShell } from "@/components/campaign-shell";
 import { NumberGrid } from "@/components/number-grid";
 import { getCampaign, getNumbers } from "@/lib/supabase";
 
+export const dynamic = "force-dynamic";
+
 export default async function NumerosPage() {
   const [campaign, numbers] = await Promise.all([getCampaign(), getNumbers()]);
   return (

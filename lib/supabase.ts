@@ -23,24 +23,29 @@ export function adminSupabase() {
 export async function getCampaign(): Promise<Campaign> {
   const supabase = adminSupabase() ?? browserSupabase();
   if (!supabase) return defaultCampaign;
-  const { data } = await supabase.from("campaigns").select("*").limit(1).single();
+  const { data, error } = await supabase.from("campaigns").select("*").limit(1).single();
+  if (error) return defaultCampaign;
   return (data as Campaign | null) ?? defaultCampaign;
+}
+
+function fallbackNumbers(total = defaultCampaign.total_numbers): RaffleNumber[] {
+  return Array.from({ length: total }, (_, index) => ({
+    id: `fallback-${index + 1}`,
+    number: index + 1,
+    status: "available",
+    order_id: null,
+    buyer_name: null,
+    buyer_whatsapp: null
+  }));
 }
 
 export async function getNumbers(): Promise<RaffleNumber[]> {
   const supabase = adminSupabase() ?? browserSupabase();
-  if (!supabase) {
-    return Array.from({ length: defaultCampaign.total_numbers }, (_, index) => ({
-      id: String(index + 1),
-      number: index + 1,
-      status: "available",
-      order_id: null,
-      buyer_name: null,
-      buyer_whatsapp: null
-    }));
-  }
-  const { data } = await supabase.from("raffle_numbers").select("*").order("number");
-  return (data as RaffleNumber[] | null) ?? [];
+  if (!supabase) return fallbackNumbers();
+  const campaign = await getCampaign();
+  const { data, error } = await supabase.from("raffle_numbers").select("*").order("number");
+  if (error || !data || data.length === 0) return fallbackNumbers(campaign.total_numbers);
+  return data as RaffleNumber[];
 }
 
 export async function getOrder(id: string): Promise<Order | null> {
